@@ -56,6 +56,8 @@ def main():
     else:
         for tool_call in chat.choices[0].message.tool_calls or []:
             tool_args = json.loads(tool_call.function.arguments)
+            print(tool_args)
+            print(tool_call.function)
             if tool_call.function.name == "Read":
                 with open(tool_args["file_path"]) as f:
                     print(f.read())
