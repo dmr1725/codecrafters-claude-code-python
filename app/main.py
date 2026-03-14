@@ -54,14 +54,13 @@ def main():
     response = chat.choices[0].message
 
     for tool_call in response.tool_calls or []:
-        tool_function_name = tool_call.function.name
-        tool_function = tool_call.function
+        tool_name = tool_call.function.name
         # print(tool_name, 'tool name')
         tool_args = json.loads(tool_call.function.arguments)
         # print(tool_args, 'tool args')
-        if tool_function_name == "Read":
-            result = tool_function(tool_args)
-            print(result)
+        if tool_name == "Read":
+            with open(tool_args["file_path"]) as f:
+                print(f.read())
     
     if response.tool_calls == []:
         print(content)
