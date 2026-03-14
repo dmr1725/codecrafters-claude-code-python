@@ -34,6 +34,27 @@ def call_llm(messages: list):
                         "required": ["file_path"]
                     }
                 }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "Write",
+                    "description": "Write content to a file",
+                    "parameters": {
+                        "type": "object",
+                        "required": ["file_path", "content"],
+                        "properties": {
+                            "file_path": {
+                            "type": "string",
+                            "description": "The path of the file to write to"
+                            },
+                            "content": {
+                            "type": "string",
+                            "description": "The content to write to the file"
+                            }
+                        }
+                    }
+                }
             }
         ]
     )
@@ -56,6 +77,17 @@ def execute_tool_call(tool_call):
                 "tool_call_id": tool_id,
                 "content": content
             }
+    
+    if tool_call.function.name == "Write":
+        content = tool_args["content"]
+        with open(tool_args["file_path"], "w") as f:
+            f.write(content)
+            return {
+                "role": "tool",
+                "tool_call_id": tool_id,
+                "content": content
+            }
+            
 
 
 
