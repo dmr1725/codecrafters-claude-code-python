@@ -50,14 +50,14 @@ def main():
 
     # TODO: Uncomment the following line to pass the first stage
     content = chat.choices[0].message.content
-    print(content, 'content')
+    # print(content, 'content')
     response = chat.choices[0].message
 
     for tool_call in response.tool_calls or []:
         tool_name = tool_call.function.name
-        print(tool_name, 'tool name')
+        # print(tool_name, 'tool name')
         tool_args = json.loads(tool_call.function.arguments)
-        print(tool_args, 'tool args')
+        # print(tool_args, 'tool args')
         if tool_name == "Read":
             with open(tool_args["file_path"]) as f:
                 print(f.read())
