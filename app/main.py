@@ -61,6 +61,9 @@ def main():
         if tool_name == "Read":
             with open(tool_args["file_path"]) as f:
                 print(f.read())
+    
+    if response.tool_calls == []:
+        print(content)
 
 
 if __name__ == "__main__":
