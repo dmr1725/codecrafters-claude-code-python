@@ -49,8 +49,9 @@ def main():
     print("Logs from your program will appear here!", file=sys.stderr)
 
     # TODO: Uncomment the following line to pass the first stage
-    response = chat.choices[0].message.content
-    print(response)
+    content = chat.choices[0].message.content
+    print(content)
+    response = chat.choices[0].message
 
     for tool_call in response.tool_calls or []:
         tool_name = tool_call.function.name
