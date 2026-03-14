@@ -56,7 +56,7 @@ def main():
     for tool_call in response.tool_calls or []:
         tool_name = tool_call.function.name
         print(tool_name)
-        tool_args = json.loads(tool_call.funcion.arguments)
+        tool_args = json.loads(tool_call.function.arguments)
         print(tool_args)
         tool_response = tool_name(**tool_args)
         print(tool_response)
