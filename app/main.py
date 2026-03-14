@@ -18,47 +18,51 @@ def main():
         raise RuntimeError("OPENROUTER_API_KEY is not set")
 
     client = OpenAI(api_key=API_KEY, base_url=BASE_URL)
-
-    chat = client.chat.completions.create(
-        model="anthropic/claude-haiku-4.5",
-        messages=[{"role": "user", "content": args.p}],
-        tools=[{
-            "type": "function",
-            "function": {
-                "name": "Read",
-                "description": "Read and return the contents of a file",
-                "parameters": {
-                "type": "object",
-                "properties": {
-                    "file_path": {
-                    "type": "string",
-                    "description": "The path to the file to read"
+    messages = [{"role": "user", "content": args.p}]
+    tools = [
+                {
+                    "type": "function",
+                    "function": {
+                        "name": "Read",
+                        "description": "Read and return the contents of a file",
+                        "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "file_path": {
+                                "type": "string",
+                                "description": "The path to the file to read"
+                                }
+                            },
+                            "required": ["file_path"]
+                        }
                     }
-                },
-                "required": ["file_path"]
                 }
-            }
-            }
-        ]
-    )
+            ]
 
-    if not chat.choices or len(chat.choices) == 0:
-        raise RuntimeError("no choices in response")
+    while True:
+        chat = client.chat.completions.create(
+            model="anthropic/claude-haiku-4.5",
+            messages=messages,
+            tools=tools
+        )
 
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!", file=sys.stderr)
+        if not chat.choices or len(chat.choices) == 0:
+            raise RuntimeError("no choices in response")
 
-    # TODO: Uncomment the following line to pass the first stage
+        # You can use print statements as follows for debugging, they'll be visible when running tests.
+        print("Logs from your program will appear here!", file=sys.stderr)
 
-    if chat.choices[0].message.content:
-        print(chat.choices[0].message.content)
-    
-    else:
-        for tool_call in chat.choices[0].message.tool_calls or []:
-            tool_args = json.loads(tool_call.function.arguments)
-            if tool_call.function.name == "Read":
-                with open(tool_args["file_path"]) as f:
-                    print(f.read())
+        if chat.choices[0].message.content:
+            print(chat.choices[0].message.content, file=sys.stderr)
+        
+        else:
+            for tool_call in chat.choices[0].message.tool_calls or []:
+                tool_args = json.loads(tool_call.function.arguments)
+                if tool_call.function.name == "Read":
+                    with open(tool_args["file_path"]) as f:
+                        print(f.read())
+        
+        break
 
 
 if __name__ == "__main__":
