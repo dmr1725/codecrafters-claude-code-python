@@ -59,7 +59,7 @@ def main():
         # print(tool_name, 'tool name')
         tool_args = json.loads(tool_call.function.arguments)
         # print(tool_args, 'tool args')
-        if tool_name == "Read":
+        if tool_function_name == "Read":
             result = tool_function(tool_args)
             print(result)
     
