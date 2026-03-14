@@ -47,12 +47,13 @@ def execute_tool_call(tool_call):
     tool_id = tool_call.id
     tool_args = json.loads(tool_call.function.arguments)
     print(f"Tool id: {tool_id}, tool args: {tool_args}", file=sys.stderr)
+
     if tool_call.function.name == "Read":
         with open(tool_args["file_path"]) as f:
             content = f.read()
             return {
                 "role": "tool",
-                "tool_id": tool_id,
+                "tool_call_id": tool_id,
                 "content": content
             }
 
