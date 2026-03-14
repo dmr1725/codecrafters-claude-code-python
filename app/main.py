@@ -108,11 +108,11 @@ def execute_tool_call(tool_call):
     
     if tool_call.function.name == "Bash":
         command = tool_args["command"]
-        result = subprocess.run(command)
+        result = subprocess.run(command.split(), capture_output=True, text=True)
         return {
             "role": "tool",
             "tool_call_id": tool_id,
-            "content": result
+            "content": result.stderr if result.stderr else result.stdout
         }
             
 
