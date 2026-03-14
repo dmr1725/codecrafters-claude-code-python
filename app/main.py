@@ -59,7 +59,7 @@ def main():
         tool_args = json.loads(tool_call.function.arguments)
         print(tool_args, 'tool args')
         with open(tool_args["file_path"]) as f:
-            print(f.Read())
+            print(f.read())
 
 
 if __name__ == "__main__":
