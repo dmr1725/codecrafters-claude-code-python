@@ -54,12 +54,13 @@ def main():
     response = chat.choices[0].message
 
     for tool_call in response.tool_calls or []:
-        tool_name = tool_call.function.name
+        tool_function_name = tool_call.function.name
+        tool_function = tool_call.function
         # print(tool_name, 'tool name')
         tool_args = json.loads(tool_call.function.arguments)
         # print(tool_args, 'tool args')
         if tool_name == "Read":
-            result = tool_call(tool_args)
+            result = tool_function(tool_args)
             print(result)
     
     if response.tool_calls == []:
