@@ -49,20 +49,14 @@ def main():
     print("Logs from your program will appear here!", file=sys.stderr)
 
     # TODO: Uncomment the following line to pass the first stage
-    content = chat.choices[0].message.content
-    # print(content, 'content')
-    response = chat.choices[0].message
 
-    if response.tool_calls == []:
-        print(content)
+    if chat.choices[0].message.content:
+        print(chat.choices[0].message.content)
     
     else:
-        for tool_call in response.tool_calls or []:
-            tool_name = tool_call.function.name
-            # print(tool_name, 'tool name')
+        for tool_call in chat.choices[0].message.tool_calls or []:
             tool_args = json.loads(tool_call.function.arguments)
-            # print(tool_args, 'tool args')
-            if tool_name == "Read":
+            if tool_call.function.name == "Read":
                 with open(tool_args["file_path"]) as f:
                     print(f.read())
 
