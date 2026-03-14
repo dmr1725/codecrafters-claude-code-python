@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 import json
+import subprocess
 
 from openai import OpenAI
 
@@ -55,6 +56,23 @@ def call_llm(messages: list):
                         }
                     }
                 }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "Bash",
+                    "description": "Execute a shell command",
+                    "parameters": {
+                    "type": "object",
+                    "required": ["command"],
+                    "properties": {
+                        "command": {
+                        "type": "string",
+                        "description": "The command to execute"
+                        }
+                    }
+                    }
+                }
             }
         ]
     )
@@ -87,6 +105,15 @@ def execute_tool_call(tool_call):
                 "tool_call_id": tool_id,
                 "content": content
             }
+    
+    if tool_call.function.name == "Bash":
+        command = tool_args["command"]
+        result = subprocess.run(command)
+        return {
+            "role": "tool",
+            "tool_call_id": tool_id,
+            "content": result
+        }
             
 
 
